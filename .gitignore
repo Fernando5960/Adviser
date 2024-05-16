@@ -484,5 +484,5 @@ $RECYCLE.BIN/
 *.swp
 
 # Custom
-uploads/
-logs/
+uploads/*
+logs/*
