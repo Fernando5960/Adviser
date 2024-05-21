@@ -2,7 +2,8 @@ using Adviser.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string logFilePath = builder.Configuration["LogFilePath"] ?? throw new Exception("Caminho do log não definido");
+string logFilePath = builder.Configuration["LogFilePath"] ?? throw new Exception("Caminho do log nï¿½o definido");
+string uploadFilePath = builder.Configuration["UploadFilePath"] ?? throw new Exception("Caminho de upload nï¿½o definido");
 logFilePath += DateTime.Now.ToString("yyyy-MM-dd-HH-mm") + ".log";
 builder.Services.AddControllersWithViews();
 builder.Services.AddLogging(builder =>
@@ -17,5 +18,15 @@ var app = builder.Build();
 app.UseStaticFiles();
 app.UseRouting();
 app.MapControllers();
+
+if (!Directory.Exists(logFilePath))
+{
+    Directory.CreateDirectory(logFilePath);
+}
+if (!Directory.Exists(uploadFilePath))
+{
+    Directory.CreateDirectory(uploadFilePath);
+}
+
 
 app.Run();

@@ -37,7 +37,7 @@ namespace Adviser.Controllers
 
                 try
                 {
-                    string uploadFilePath = _configuration["UploadFilePath"] ?? throw new Exception("Caminho de upload n�o definido");
+                    string uploadFilePath = _configuration["UploadFilePath"]!;
                     string filePath = Path.Combine(uploadFilePath, file.FileName);
                     using (Stream fileStream = new FileStream(filePath, FileMode.Create))
                     {
