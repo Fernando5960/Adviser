@@ -23,29 +23,37 @@ namespace Adviser.Controllers
 
         [HttpPost]
         [Route("submitForm")]
+        [RequestSizeLimit(10485760)]
         public async Task<IActionResult> SubmitForm(IFormFile file)
         {
-
-            if (file == null || file.Length == 0)
+            if (ModelState.IsValid)
             {
-                _logger.Log(LogLevel.Information, "Nenhum arquivo enviado.");
-                return BadRequest("Nenhum arquivo enviado.");
-            }
 
-            try
-            {
-                string uploadFilePath = _configuration["UploadFilePath"] ?? throw new Exception("Caminho de upload n�o definido");
-                string filePath = Path.Combine(uploadFilePath, file.FileName);
-                using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+                if (file == null || file.Length == 0)
                 {
-                    await file.CopyToAsync(fileStream);
+                    _logger.Log(LogLevel.Information, "Nenhum arquivo enviado.");
+                    return BadRequest("Nenhum arquivo enviado.");
                 }
+
+                try
+                {
+                    string uploadFilePath = _configuration["UploadFilePath"] ?? throw new Exception("Caminho de upload n�o definido");
+                    string filePath = Path.Combine(uploadFilePath, file.FileName);
+                    using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Log(LogLevel.Error, $"Ocorreu um erro ao processar a requisição: {ex.Message}");
+                    return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                }
+                _logger.Log(LogLevel.Information, $"Arquivo enviado com sucesso: {file.FileName}");
+                TempData["Success"] = true;
+                return RedirectToAction("Index");
             }
-            catch (Exception ex)
-            {
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-            }
-            TempData["Success"] = true;
+            TempData["Success"] = null;
             return RedirectToAction("Index");
         }
     }
