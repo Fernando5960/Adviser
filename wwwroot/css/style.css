@@ -15,11 +15,15 @@
     margin: 50px auto auto auto;
 }
 
-#formFile{
-    margin-bottom: 10px;
-}
-
 #formLabel{
     font-weight: bold;
     font-size: large;
+}
+
+#formButton{
+    margin-top: 10px
+}
+#fileValidation{
+    font-size: large;
+    font-weight: bold;
 }

@@ -7,16 +7,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Envie um Anexo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
     <div class="content">
         <div class="form-container">
             <div class="form">
-                <form asp-controller="Home" asp-action="SubmitForm" method="post" enctype="multipart/form-data">
+                <form asp-controller="Home" asp-action="SubmitForm" method="post" enctype="multipart/form-data" onsubmit="return checkFileSize();">
                     <div class="mb-3">
                         <label for="formFile" class="form-label" id="formLabel">Anexe o arquivo que deseja enviar</label>
                         <input class="form-control" type="file" id="formFile" name="file" required>
+                        <div id="fileValidation" class="invalid-feedback">
+                            O arquivo deve possui no m&#225ximo 100MB
+                        </div>
                         <button type="submit" class="btn btn-secondary" id=formButton>Enviar</button>
                     </div>
                 </form>
@@ -31,7 +36,23 @@
         </div>
         }
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        function checkFileSize() {
+            if (($('#formFile')[0]?.files[0]?.size ?? 0) <= 100000000) {
+                $('#formFile').removeClass('is-invalid')
+                return true
+            }
+            else {
+                $('#formFile').addClass('is-invalid')
+                return false
+            }
+        }
+
+        $('#formFile').on('change', function(){
+            $('#formFile').removeClass('is-invalid')
+        })
+
+    </script>
   </body>
 </html>
 
